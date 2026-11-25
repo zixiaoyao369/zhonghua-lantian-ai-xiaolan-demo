@@ -821,3 +821,21 @@ dialog .muted { font-size: 13px; line-height: 1.7; }
 .overview-footer .button { justify-content: flex-start; min-height: 43px; font-size: 12px; padding: 9px 12px; background: #fff; border-color: #d5e4f8; }
 .overview-footer .line-icon { width: 17px; height: 17px; }
 .overview-switch { margin-left: auto; color: #0866ef; font-size: 12px; }
+
+dialog[data-kind="safety"] { padding: 21px 18px; }
+.safety-dialog-header > span { font-size: 11px; color: #467ec4; }
+.safety-dialog-header h2 { margin-top: 3px; border: 0; padding-bottom: 0; margin-bottom: 5px; font-size: 24px; }
+.safety-dialog-header > p { font-size: 12px; color: #7a90aa; margin: 0 0 18px; }
+.safety-tabs { display: grid; grid-template-columns: repeat(3,1fr); gap: 7px; padding: 5px; border-radius: 13px; background: #e6eef9; margin-bottom: 19px; }
+.safety-tabs button { border: 1px solid transparent; background: transparent; color: #5b7598; border-radius: 9px; padding: 10px 2px; }
+.safety-tabs strong { display: block; font-size: 13px; }
+.safety-tabs button > span { display: block; font-size: 10px; opacity: .8; margin-top: 3px; }
+.safety-tabs [aria-selected="true"] { background: #fff; border-color: #ccdef6; color: #075fdb; box-shadow: 0 2px 5px #2459970c; }
+.safety-group-title { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+.safety-group-title h3 { font-size: 17px; }
+.safety-group-title > span { color: #a96a27; background: #fff0da; padding: 3px 8px; border-radius: 6px; font-size: 10px; }
+.safety-rules { list-style: none; padding: 0; margin: 0; }
+.safety-rules li { display: flex; align-items: flex-start; gap: 10px; padding: 13px 0; border-bottom: 1px solid #e0eaf7; }
+.safety-rules li > span { flex: 0 0 23px; height: 23px; display: grid; place-items: center; background: #e3eeff; color: #1665ce; border-radius: 7px; font-size: 12px; font-weight: 700; margin-top: 2px; }
+.safety-rules p { margin: 0; color: #264569; font-size: 14px; line-height: 1.8; }
+.safety-original { display: inline-block; margin-top: 15px; font-size: 11px; color: #6484ab; text-decoration: none; }

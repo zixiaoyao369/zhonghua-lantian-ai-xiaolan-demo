@@ -107,6 +107,13 @@ function ahfLocation(primary=false){
  const url='https://uri.amap.com/search?keyword='+encodeURIComponent(address)+'&callnative=1';
  show('<h2>'+escape(place)+'</h2><p class="muted">具体点位坐标待客户补充。可先导航至基地，到厂后按现场指引或联系负责人确认。</p><div class="delivery-address"><span>基地地址</span><p>'+escape(address)+'</p></div><a class="button wide" href="'+url+'" target="_blank" rel="noopener">导航至基地</a>'+button('联系本环节负责人','contact','button secondary wide'));
 }
+const safetyGroups=[{"title": "保命规则", "label": "必须遵守", "items": ["危险作业必须办理作业许可证。", "高处作业必须系挂好安全带。", "严禁置身于吊起的重物下面。", "进入受限空间必须进行能量隔离和气体检测。", "动火作业必须清除或移除设备内及区域的易燃可燃物。", "检维修作业必须进行能量隔离并上锁挂签。", "严禁私自关闭或拆除安全保护装置。", "特种作业必须由持有相应有效证书的人员实施。"]}, {"title": "安全红线", "label": "严格执行", "items": ["高处、临边作业无条件系五点式安全带。", "PSSR列出的必改项，必须落实整改，并经验收合格后方可开车。", "受限空间存在未知风险，未经许可严禁入内。", "电器设备检维修前必须断电并上锁挂签。"]}, {"title": "五项清退令", "label": "违反即清退", "items": ["不按要求佩戴安全帽的直接予以清退。", "高处或临边作业不正确佩挂安全带的直接予以清退。", "有毒有害、易燃易爆岗位操作不正确佩戴PPE的直接予以清退。", "严重“三违”的直接予以清退。", "违反企业保命条款的直接予以清退。"]}];
+let safetyGroup=0;
+function renderSafety(){
+ const g=safetyGroups[safetyGroup];
+ show('<div class="safety-dialog-header"><span>入厂必看</span><h2>安全管理要求</h2><p>遵守保命规则，守住安全底线</p></div><div class="safety-tabs" role="tablist" aria-label="安全要求分组">'+safetyGroups.map((x,i)=>'<button role="tab" aria-selected="'+(i===safetyGroup)+'" data-action="safety-tab" data-index="'+i+'"><strong>'+x.title+'</strong><span>'+x.items.length+'项</span></button>').join('')+'</div><div class="safety-group-title"><h3>'+g.title+'</h3><span>'+g.label+'</span></div><ol class="safety-rules">'+g.items.map((text,i)=>'<li><span>'+(i+1)+'</span><p>'+escape(text)+'</p></li>').join('')+'</ol><a class="safety-original" href="素材/安全管理原图.jpg" target="_blank" rel="noopener">查看现场公示原图 ↗</a>');
+ modal.dataset.kind='safety';
+}
 function render(){
  app.dataset.page=state.page;
  if(state.page==='home'){
@@ -210,7 +217,9 @@ document.addEventListener('click',e=>{
  else if(a==='sample-prev'){samplePage=Math.max(1,samplePage-1);sample()}
  else if(a==='sample-next'){samplePage=Math.min(13,samplePage+1);sample()}
  else if(a==='booking'){const unloading=state.step===2;const name=unloading?'卸车预约':'关卡预约';show('<h2>'+name+'</h2><img class="doc-img" src="素材/ahf/二维码'+(unloading?'2':'1')+'.png" alt="'+name+'二维码"><p class="muted">长按识别二维码，进入'+name+'。</p>');modal.dataset.kind='booking'}
- else if(a==='safety'){show('<h2>入厂必看 · 安全管理要求</h2>'+['厂区内严禁烟火，手机按现场指定区域使用','进入生产区域按要求佩戴安全帽及防护用品','车辆限速 5 km/h，按指定路线行驶','危化车辆按要求静电接地，服从现场指挥','禁止随意丢弃垃圾杂物'].map(t=>'<div class="safe-row">⚠ '+t+'</div>').join('')+'<p class="muted">请阅读后返回。正式条款以客户确认的安全管理资料为准。</p>');let remaining=10;try{if(localStorage.getItem(KEY+'-safety'))return}catch{}const close=document.getElementById('close-modal');close.disabled=true;close.textContent='请阅读 '+remaining+' 秒';const timer=setInterval(()=>{remaining--;close.textContent=remaining?'请阅读 '+remaining+' 秒':'已阅读，返回';if(!remaining){clearInterval(timer);close.disabled=false;try{localStorage.setItem(KEY+'-safety','1')}catch{}}},1000)}
+ else if(a==='safety-tab'){safetyGroup=Number(el.dataset.index);renderSafety()}
+ else if(a==='safety'){safetyGroup=0;renderSafety();const close=document.getElementById('close-modal');close.textContent='已阅读，返回';close.disabled=false}
+
  else if(a==='back'){if(state.page==='qa')go(returnPage);else if(state.page==='location'){state.step=locationOrigin;go('step');}else if(state.page==='step')go('overview');else if(state.page==='overview')go('goods');else go('home')}
 });
 document.getElementById('close-modal').onclick=()=>modal.close();
