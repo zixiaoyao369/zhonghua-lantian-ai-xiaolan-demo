@@ -4,7 +4,7 @@ window.AHF_PREPARATION={
     "车辆标识与实物一致",
     "出车前核对送货地址"
   ],
-  "documents": "合格证/检测报告；SCM发货单",
+  "documents": "合格证/检测报告",
   "ppe": "安全帽、长衣长袖、包面鞋",
   "reminder": "单据缺一样不让进；SCM当天录单，假后顺延",
   "faq": [

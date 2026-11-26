@@ -44,24 +44,30 @@ function ahfPreparation(){
  const requirementRow=(number,text,action)=>'<div class="preparation-row"><span class="check-number">'+number+'</span><div class="preparation-content"><p>'+escape(text)+'</p></div>'+action+'</div>';
  const mapUrl='https://uri.amap.com/search?keyword='+encodeURIComponent(d.address)+'&callnative=1';
  return '<div class="page1-utilities">'+button('切换物资','change-goods','text-button')+button(windowIcon('shield')+'入厂必看','safety','text-button')+'</div>'+
- '<div class="preparation-heading"><h2>出发前，逐项核对</h2><p>车辆、单据和穿戴，准备齐全再出发</p></div>'+
+ '<div class="preparation-heading"><h2>出发前，逐项核对</h2><p>穿戴、车辆和单据，准备齐全再出发</p></div>'+
+ '<section class="card preparation-group"><h3>'+windowIcon('shield')+'PPE（穿戴）</h3>'+requirementRow(1,d.ppe,sampleButton('ppe'))+'</section>'+
  '<section class="card preparation-group"><h3>'+windowIcon('truck')+'车辆 / 驾驶员</h3>'+
- requirementRow(1,d.vehicle[0],sampleButton('fire'))+
- requirementRow(2,d.vehicle[1],sampleButton('identity'))+
- requirementRow(3,d.vehicle[2],'<a class="requirement-link" href="'+mapUrl+'" target="_blank" rel="noopener">'+windowIcon('pin')+'导航<span class="requirement-chevron">›</span></a>')+
+ requirementRow(2,'随车配备灭火器且在有效期内',sampleButton('extinguisher'))+
+ requirementRow(3,'配备阻火器并正确安装',sampleButton('fire'))+
+ requirementRow(4,d.vehicle[1],sampleButton('identity'))+'</section>'+
+ '<section class="card preparation-group"><h3>'+windowIcon('box')+'随车资料</h3>'+requirementRow(5,'合格证',sampleButton('certificate'))+requirementRow(6,'检测报告',sampleButton('report'))+requirementRow(7,'危险货物道路运输单',sampleButton('transport'))+'</section>'+
+ '<section class="card preparation-group"><h3>'+windowIcon('pin')+'位置</h3>'+
+ requirementRow(8,d.vehicle[2],'<a class="requirement-link" href="'+mapUrl+'" target="_blank" rel="noopener">'+windowIcon('pin')+'导航<span class="requirement-chevron">›</span></a>')+
  '<div class="delivery-address"><span>送货地址</span><p>'+escape(d.address)+'</p></div></section>'+
- '<section class="card preparation-group"><h3>'+windowIcon('box')+'随车资料</h3>'+requirementRow(4,d.documents,sampleButton('documents'))+'</section>'+
- '<section class="card preparation-group"><h3>'+windowIcon('shield')+'PPE（穿戴）</h3>'+requirementRow(5,d.ppe,sampleButton('ppe'))+'</section>'+
- '<section class="page1-reminder">'+windowIcon('info')+'<div><h3>高频易错提醒</h3><p>'+escape(d.reminder)+'</p></div></section>'+
+ '<section class="page1-reminder">'+windowIcon('info')+'<div><h3>高频易错问题提醒</h3><p>'+escape(d.reminder)+'</p></div></section>'+
  '<section class="card"><h3>高频问题</h3>'+d.faq.map(x=>'<details><summary><span class="faq-code">'+x.id+'</span>'+escape(x.q)+'</summary><p>'+escape(x.a)+'</p></details>').join('')+'</section>'+
  '<p class="page1-help">没找到答案？点击底部「未解决，联系负责人」。</p>';
 }
 function page1Sample(key){
  const samples={
- fire:{title:'灭火器、阻火器在有效期内',file:'阻火器.png',note:'客户提供的阻火器规范安装样图。灭火器及有效期核验样图待补充。'},
+ certificate:{title:'合格证',file:'合格证示意完整版.png'},
+ report:{title:'检测报告',file:'检测报告示意完整版.png'},
+ transport:{title:'危险货物道路运输单',file:'危险货物道路运输单示意完整版.png'},
+ extinguisher:{title:'随车配备灭火器且在有效期内',file:'随车灭火器检查示意.png',note:''},
+ fire:{title:'配备阻火器并正确安装',file:'阻火器规范安装示意.png',note:'客户提供的阻火器规范安装样图。灭火器及有效期核验样图待补充。'},
  identity:{title:'车辆标识与实物一致',file:'车辆标识与实物一致.png',note:''},
- documents:{title:'合格证 / 检测报告；SCM发货单',file:'合格证.png',note:'客户提供的合格证样图。SCM发货单样图待补充。'},
- ppe:{title:'安全帽、长衣长袖、包面鞋',file:'PPE穿戴.png',note:'客户提供的 PPE 穿戴样图。'}
+ documents:{title:'合格证 / 检测报告',file:'合格证.png',note:'客户提供的合格证样图。SCM发货单样图待补充。'},
+ ppe:{title:'安全帽、长衣长袖、包面鞋',file:'PPE规范穿戴示意.png',note:'客户提供的 PPE 穿戴样图。'}
  };
  const item=samples[key];if(!item)return;
  const url='素材/页面1/'+item.file;
@@ -76,6 +82,15 @@ function ahfFlowPage(){
  const primaryAction=page===2||page===3?'booking':page===5?'ahf-primary-location':'ahf-guide';
  const numbered=items=>items.map((text,i)=>'<div class="check numbered-item"><span class="check-number">'+(i+1)+'</span><span>'+escape(text)+'</span></div>').join('');
  const req=d.requirements.map((text,i)=>{
+  if(page===2){
+   const content=[
+    '<strong>两个预约，缺一不可</strong><div class="gate-flow-chips"><span>园区预约</span><b>＋</b><span>过磅预约</span></div>',
+    '<strong>填报信息真实准确</strong><p>请核对信息后提交，填写不实或不准确将被驳回。</p>',
+    '<strong>二级审核通过后入园</strong><div class="gate-flow-chips"><span>企业审核</span><b>→</b><span>园区审核</span></div>'
+   ];
+   return '<div class="gate-rule"><span class="gate-rule-index">'+(i+1)+'</span><div class="gate-rule-content">'+content[i]+'</div></div>';
+  }
+
   if(page===3&&i===1)return '<div class="ahf-time-grid"><div><span>上午 · 约2车</span><strong>9:00–9:30</strong></div><div><span>下午 · 约2车</span><strong>12:00–12:30</strong></div></div>';
   return '<div class="check numbered-item"><span class="check-number">'+(i+1)+'</span><span>'+escape(text)+'</span></div>';
  }).join('');
@@ -114,19 +129,28 @@ function renderSafety(){
  show('<div class="safety-dialog-header"><span>入厂必看</span><h2>安全管理要求</h2><p>遵守保命规则，守住安全底线</p></div><div class="safety-tabs" role="tablist" aria-label="安全要求分组">'+safetyGroups.map((x,i)=>'<button role="tab" aria-selected="'+(i===safetyGroup)+'" data-action="safety-tab" data-index="'+i+'"><strong>'+x.title+'</strong><span>'+x.items.length+'项</span></button>').join('')+'</div><div class="safety-group-title"><h3>'+g.title+'</h3><span>'+g.label+'</span></div><ol class="safety-rules">'+g.items.map((text,i)=>'<li><span>'+(i+1)+'</span><p>'+escape(text)+'</p></li>').join('')+'</ol><a class="safety-original" href="素材/安全管理原图.jpg" target="_blank" rel="noopener">查看现场公示原图 ↗</a>');
  modal.dataset.kind='safety';
 }
+function miniProgramHome(target=app){
+ const items=[['chemical','危化/危废申报'],['truck','普货/工程车申报'],['vehicle','访客车辆申报'],['visitor','访客人员申报'],['alarm','一键报警']];
+ target.innerHTML='<div class="mini-header"><strong>首页</strong><div class="mini-capsule">'+button('•••','mini-menu','mini-menu')+'<span></span>'+button('◉','mini-close','mini-close')+'</div></div><div class="mini-scroll"><img class="mini-banner" src="素材/关卡小程序/banner.png" alt="申报系统，申报、在线、快捷"><h2>导航栏</h2><div class="mini-services">'+items.map(([key,label])=>'<button data-action="mini-service" data-label="'+label+'"><img src="素材/关卡小程序/'+key+'.png" alt=""><span>'+label+'</span></button>').join('')+'</div></div><nav class="mini-tabs">'+[['home','首页'],['tool','记录'],['box','开票'],['user','我的']].map(([icon,label],i)=>'<button data-action="mini-tab" data-label="'+label+'" class="'+(i===0?'selected':'')+'">'+windowIcon(icon)+'<span>'+label+'</span></button>').join('')+'</nav>';
+}
+function logisticsReservation(target=app){
+ target.innerHTML='<div class="logistics-header">'+button(windowIcon('back'),'mini-close','logistics-back')+'<strong>中化蓝天物流预约</strong>'+button(windowIcon('user'),'logistics-profile','logistics-profile')+'</div><div class="logistics-body"></div><nav class="logistics-bottom">'+button(windowIcon('box'),'logistics-menu','logistics-menu')+button('陕西 <span class="logistics-link">↗</span>','logistics-region','logistics-region')+button('太仓上虞 <span class="logistics-link">↗</span>','logistics-region','logistics-region')+'</nav>';
+}
 function render(){
  app.dataset.page=state.page;
+ if(state.page==='mini-program'){miniProgramHome();return}
+ if(state.page==='logistics-reservation'){logisticsReservation();return}
  if(state.page==='home'){
  shell('<header class="home-header"><div class="home-wordmark">厂区通<span>AI小蓝</span></div></header>',
- '<div class="hero"><div class="hero-copy"><p class="base-name">中化蓝天陕西基地</p><h1>送货入厂，<br>小蓝来帮你</h1><p>入厂须知、送货流程，一步步为你指引</p></div>'+artwork('assistant','hero-art')+'</div>'+
+ '<div class="hero"><div class="hero-copy"><p class="base-name">中化蓝天陕西基地</p><h1>送货入厂，小蓝来帮你</h1><p>入厂须知、送货流程，一步步为你指引</p></div>'+artwork('assistant','hero-art')+'</div>'+
  button(windowIcon('shield')+'<span>入厂必看 · 安全管理要求</span><span class="arrow">›</span>','safety','safety')+
  '<div class="section-label"><h2>请选择您的到厂身份</h2></div>'+
  '<button class="card role primary-role" data-action="delivery"><div class="role-copy"><h2>送货司机</h2><p>原料 / 包装物 / 设备物资等</p><span class="circle-arrow">'+windowIcon('arrow')+'</span></div>'+artwork('truck','truck-art')+'</button>'+
- '<div class="role-grid"><button class="card role" data-action="pending" data-role="售后服务人员">'+artwork('service')+'<h2>售后服务人员</h2><p class="muted">设备维修、调试</p><div class="role-bottom"><span class="tag">待定</span><span class="circle-arrow">'+windowIcon('arrow')+'</span></div></button>'+
- '<button class="card role" data-action="pending" data-role="访客业务交流">'+artwork('visitor')+'<h2>访客业务交流</h2><p class="muted">参观、业务沟通</p><div class="role-bottom"><span class="tag">待定</span><span class="circle-arrow">'+windowIcon('arrow')+'</span></div></button></div>',
- '<footer class="footer home-footer">'+button(windowIcon('chat')+'<span>有其他问题？问小蓝</span><span class="arrow">›</span>','qa','button secondary wide')+'</footer>');
+ '<div class="role-grid"><button class="card role" data-action="pending" data-role="售后服务人员">'+artwork('service-v4')+'<h2>售后服务人员</h2><p class="muted">设备维修、调试</p><div class="role-bottom"><span class="circle-arrow">'+windowIcon('arrow')+'</span></div></button>'+
+ '<button class="card role" data-action="pending" data-role="访客业务交流">'+artwork('visitor-v4')+'<h2>访客业务交流</h2><p class="muted">参观、业务沟通</p><div class="role-bottom"><span class="circle-arrow">'+windowIcon('arrow')+'</span></div></button></div>',
+ '');
  }else if(state.page==='goods'){
- shell(title('选择送货物资'),intro('您送的是哪一类货？','选择物资，查看专属送货指引','truck')+[['原料','🛢','AHF、TCE 等'],['包装物','📦','瓶子、盖子，含空罐、空瓶回收'],['其他','🔩','设备、安装材料、油品、办公等']].map(([name,icon,sub])=>'<button class="card step-card" data-action="goods" data-goods="'+name+'"><span class="number">'+windowIcon(name==='原料'?'raw':name==='包装物'?'packaging':'equipment')+'</span><div><h2 style="margin:0">'+name+'</h2><div class="muted">'+sub+'</div></div><span class="arrow">→</span></button>').join('')+'<p class="muted">拿不准？可以选择「其他」，进入流程后可切换。</p>');
+ shell(title('选择送货物资'),intro('您送的是哪一类物资？','选择物资，查看专属送货指引','truck')+[['原料','🛢','AHF、TCE 等'],['包装物','📦','瓶子、盖子，含空罐、空瓶回收'],['其他','🔩','设备、安装材料、油品、办公等']].map(([name,icon,sub])=>'<button class="card step-card" data-action="goods" data-goods="'+name+'"><span class="number">'+windowIcon(name==='原料'?'raw':name==='包装物'?'packaging':'equipment')+'</span><div><h2 style="margin:0">'+name+'</h2><div class="muted">'+sub+'</div></div><span class="arrow">→</span></button>').join('')+'<p class="muted">拿不准？可以选择「其他」，进入流程后可切换。</p>');
  }else if(state.page==='overview'){
  const summaries=['车辆、随车单据与防护穿戴','双预约要求、填报资料与审核','预约时段、北门排队与签到','短信制卡、过磅与入厂要求','卸车位确认、交单与休息等待','再次签字、过磅与物品归还'];
  const stages=['出发前','到园前','到厂前','入厂时','卸车时','离厂前'];
@@ -155,8 +179,8 @@ function render(){
  }else if(state.page==='location'){
  const n=stepData();shell(title('位置指引',state.goods+' · '+n.name),intro('本环节去哪办理？','按步骤查看地点，按现场指引通行','truck')+'<div class="card"><h2>'+n.posPlace+'</h2><p>'+n.posDetail+'</p><p class="muted">'+n.posTodo+'</p></div><div class="map-list">'+nodes.map((x,i)=>'<button class="card step-card" data-action="loc-step" data-index="'+i+'"><div><h3>'+x.n+' · '+x.posPlace+'</h3><div class="muted">'+x.name+'</div></div></button>').join('')+'</div><div class="card"><h3>导航信息待补充</h3><p class="muted">厂内坐标及路线尚未提供，请按现场标识行驶，或联系负责人确认。</p>'+button('联系负责人','contact','button secondary wide')+'</div>','<footer class="footer">'+button('返回原流程','step','button wide')+'</footer>');
  }else if(state.page==='qa'){
- app.innerHTML=title('问小蓝 · 文字咨询',state.role+(state.role==='送货司机'?' · '+state.goods+' · '+nodes[state.step].name:''))+
- (!navigator.onLine?'<div class="scroll"><h2>文字问答需要联网</h2><p>请恢复网络后重试，可返回查看固定流程。</p>'+button('重试','qa')+'</div>':'<iframe class="qa-frame" title="一期文字知识问答" src="一期文字问答.html?role='+encodeURIComponent(state.role)+'&goods='+encodeURIComponent(state.goods)+'&step='+state.step+'"></iframe>');
+ app.innerHTML=title('问小蓝',state.role+(state.role==='送货司机'?' · '+state.goods+' · '+nodes[state.step].name:''))+
+ (!navigator.onLine?'<div class="scroll"><h2>文字问答需要联网</h2><p>请恢复网络后重试，可返回查看固定流程。</p>'+button('重试','qa')+'</div>':'<iframe class="qa-frame" title="一期文字知识问答" src="一期文字问答.html?v=11382a7f627a&role='+encodeURIComponent(state.role)+'&goods='+encodeURIComponent(state.goods)+'&step='+state.step+'"></iframe>');
  }
 }
 function faqAnswer(q,n){
@@ -166,7 +190,7 @@ function faqAnswer(q,n){
 function show(html){modal.dataset.kind=html.includes('须知')?'sample':html.includes('预约入口')?'booking':html.includes('联系本环节')?'contact':html.includes('安全管理')||html.includes('重要提示')?'safety':'message';document.getElementById('dialog-content').innerHTML=html;if(!modal.open)modal.showModal()}
 function feedback(){
  feedbackReasons=new Set();
- show('<h2>本环节哪里需要改进？</h2><p class="muted">'+escape(state.goods)+' · '+nodes[state.step].name+'</p><div class="feedback-contact"><div><h3>需要进一步帮助？</h3><p>联系本环节负责人确认处理。</p></div>'+button('联系负责人','contact','button')+'</div><p class="feedback-label">选择原因或填写留言，帮助我们改进</p><div class="feedback-reasons">'+['回答不准确','没有解决我的问题','内容不够完整','来源不匹配'].map(t=>'<button class="reason-chip" data-action="reason" aria-pressed="false">'+t+'</button>').join('')+'</div><label class="sr-only" for="feedback-message">补充说明</label><textarea id="feedback-message" maxlength="500" placeholder="补充说明（也可以只选择上方快捷原因）"></textarea><p class="feedback-count"><span id="feedback-length">0</span> / 500</p><button class="button wide" id="submit-feedback" data-action="submit-feedback" disabled>提交反馈</button><p class="feedback-demo-note">当前为演示，反馈仅在本次页面中展示提交结果。</p>');
+ show('<h2>本环节哪里需要改进？</h2><p class="muted">'+escape(state.goods)+' · '+nodes[state.step].name+'</p><div class="feedback-contact"><div><h3>需要进一步帮助？</h3><p>联系本环节负责人确认处理。</p></div>'+button('联系负责人','contact','button')+'</div><p class="feedback-label">选择原因或填写留言，帮助我们改进</p><div class="feedback-reasons">'+['回答不准确','没有解决我的问题','内容不够完整','来源不匹配'].map(t=>'<button class="reason-chip" data-action="reason" aria-pressed="false">'+t+'</button>').join('')+'</div><label class="sr-only" for="feedback-message">补充说明</label><textarea id="feedback-message" maxlength="500" placeholder="补充说明（也可以只选择上方快捷原因）"></textarea><p class="feedback-count"><span id="feedback-length">0</span> / 500</p><button class="button wide" id="submit-feedback" data-action="submit-feedback" disabled>提交反馈</button>');
  modal.dataset.kind='feedback';
 }
 function updateFeedbackSubmit(){
@@ -188,8 +212,8 @@ function sample(){
 app.addEventListener('change',e=>{if(e.target.dataset.check){state.checks[e.target.dataset.check]=e.target.checked;persist()}});
 document.addEventListener('click',e=>{
  const el=e.target.closest('[data-action]');if(!el)return;const a=el.dataset.action;
- if(a==='home'){go('home')}else if(a==='delivery'){state.role='送货司机';go('goods')}
- else if(a==='pending'){state.role=el.dataset.role;go('pending')}
+ if(a==='home'){go('home')}else if(a==='delivery'){state.role='送货司机';returnPage='home';go('qa')}
+ else if(a==='pending'){state.role=el.dataset.role;returnPage='home';go('qa')}
  else if(a==='goods'){state.goods=el.dataset.goods;state.mode='direct';persist();go('overview')}
  else if(a==='jump'){openStep(Number(el.dataset.index))}
  else if(a==='resume'){state.role='送货司机';openStep(state.step)}
@@ -212,17 +236,38 @@ document.addEventListener('click',e=>{
  else if(a==='like'){likedSteps.add(state.goods+':'+state.step);el.innerHTML=windowIcon('like')+'<span>已点赞</span>';el.classList.add('is-liked');el.setAttribute('aria-pressed','true')}
  else if(a==='feedback')feedback();
  else if(a==='reason'){const reason=el.textContent;if(feedbackReasons.has(reason))feedbackReasons.delete(reason);else feedbackReasons.add(reason);el.setAttribute('aria-pressed',String(feedbackReasons.has(reason)));updateFeedbackSubmit()}
- else if(a==='submit-feedback'){const message=document.getElementById('feedback-message').value.trim();if(!feedbackReasons.size&&!message)return;show('<div class="feedback-success"><h2>感谢反馈</h2><p>已收到本次演示反馈。</p><p class="muted">'+escape(state.goods)+' · '+nodes[state.step].name+'</p>'+(feedbackReasons.size?'<p>'+[...feedbackReasons].map(escape).join('、')+'</p>':'')+(message?'<blockquote>'+escape(message)+'</blockquote>':'')+button('联系负责人','contact','button wide')+'<p class="feedback-demo-note">演示反馈尚未发送至后台。</p></div>');modal.dataset.kind='feedback-success'}
+ else if(a==='submit-feedback'){const message=document.getElementById('feedback-message').value.trim();if(!feedbackReasons.size&&!message)return;show('<div class="feedback-success"><h2>感谢反馈</h2><p>反馈已保存。</p><p class="muted">'+escape(state.goods)+' · '+nodes[state.step].name+'</p>'+(feedbackReasons.size?'<p>'+[...feedbackReasons].map(escape).join('、')+'</p>':'')+(message?'<blockquote>'+escape(message)+'</blockquote>':'')+button('联系负责人','contact','button wide')+'</div>');modal.dataset.kind='feedback-success'}
  else if(a==='sample'){samplePage=1;if(state.goods==='原料')sample();else show('<h2>样图待补充</h2><p>该类物资的准备资料及操作样图尚未提供，可联系对接人确认。</p>')}
  else if(a==='sample-prev'){samplePage=Math.max(1,samplePage-1);sample()}
  else if(a==='sample-next'){samplePage=Math.min(13,samplePage+1);sample()}
- else if(a==='booking'){const unloading=state.step===2;const name=unloading?'卸车预约':'关卡预约';show('<h2>'+name+'</h2><img class="doc-img" src="素材/ahf/二维码'+(unloading?'2':'1')+'.png" alt="'+name+'二维码"><p class="muted">长按识别二维码，进入'+name+'。</p>');modal.dataset.kind='booking'}
+ else if(a==='booking'){go(state.step===1?'mini-program':'logistics-reservation')}
+
  else if(a==='safety-tab'){safetyGroup=Number(el.dataset.index);renderSafety()}
  else if(a==='safety'){safetyGroup=0;renderSafety();const close=document.getElementById('close-modal');close.textContent='已阅读，返回';close.disabled=false}
 
+ else if(a==='logistics-profile'||a==='logistics-menu'||a==='logistics-region'){show('<h2>中化蓝天物流预约</h2><p class="muted">请选择办理区域。</p>')}
+ else if(a==='mini-close'){if(modal.open)modal.close();if(state.caseReturn){state.caseReturn=false;app.querySelector('.case-booking-surface')?.remove();for(const el of app.children){if(el.hasAttribute('data-case-style')){const style=el.getAttribute('data-case-style');if(style)el.setAttribute('style',style);else el.removeAttribute('style');el.removeAttribute('data-case-style')}}state.page='qa';app.dataset.page='qa'}else go('step')}
+ else if(a==='mini-menu'){show('<h2>智慧中心申报系统</h2>'+button('返回厂区通送货流程','mini-close','button wide'))}
+ else if(a==='mini-service'||a==='mini-tab'){if(el.dataset.label==='首页'){miniProgramHome();return}show('<h2>'+escape(el.dataset.label)+'</h2><p class="muted">请选择需要办理的服务。</p>')}
  else if(a==='back'){if(state.page==='qa')go(returnPage);else if(state.page==='location'){state.step=locationOrigin;go('step');}else if(state.page==='step')go('overview');else if(state.page==='overview')go('goods');else go('home')}
 });
 document.getElementById('close-modal').onclick=()=>modal.close();
 modal.addEventListener('cancel',e=>{if(document.getElementById('close-modal').disabled)e.preventDefault()});
 window.addEventListener('online',render);window.addEventListener('offline',render);
 render();
+window.addEventListener('message',event=>{
+ const frame=app.querySelector('.qa-frame');
+ if(!frame||event.source!==frame.contentWindow)return;
+ if(event.data&&event.data.type==='ahf-demo-action'){
+  const action=event.data.action;
+  if(action==='guide'){state.role='送货司机';go('goods')}
+  else if(action==='safety'){safetyGroup=0;renderSafety()}
+  else if(action==='location'){show('<h2>陕西新材料北门</h2><p>陕西中化蓝天化工新材料有限公司</p><p>陕西省渭南市蒲城县孙镇庙前村</p><p class="muted">预约厂门请选择「陕西新材料北门」。当前导航按厂区地址检索，请核对北门入口后行驶。</p><a class="button wide" target="_blank" rel="noopener" href="https://uri.amap.com/search?keyword='+encodeURIComponent('陕西中化蓝天化工新材料有限公司')+'&callnative=1">打开地图导航</a>')}
+  else if(action==='gate'||action==='unload'){state.caseReturn=true;for(const el of app.children){el.setAttribute('data-case-style',el.getAttribute('style')||'');el.style.setProperty('display','none','important')}const surface=document.createElement('div');surface.className='case-booking-surface';surface.style.display='contents';app.append(surface);state.page=action==='gate'?'mini-program':'logistics-reservation';app.dataset.page=state.page;if(action==='gate')miniProgramHome(surface);else logisticsReservation(surface)}
+  return;
+ }
+ if(event.data&&event.data.type==='open-material-guide'){
+  state.role='送货司机';
+  go('goods');
+ }
+});
