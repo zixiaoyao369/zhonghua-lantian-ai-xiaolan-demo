@@ -965,3 +965,10 @@ dialog[data-kind="safety"] { padding: 21px 18px; }
 
 
 .app[data-page="home"] .role-grid .artwork{mix-blend-mode:normal;mask-image:none;-webkit-mask-image:none;}
+
+/* One continuous canvas behind status, brand banner and introduction. */
+.phone-screen:has(.app[data-page="home"]){background:var(--bg) url("视觉/home-top-v5.png") center top/393px 280px no-repeat;}
+.phone-screen:has(.app[data-page="home"]) .phone-status{background:transparent;}
+.app[data-page="home"]{background:transparent;}
+.app[data-page="home"] .home-header,.app[data-page="home"] .hero{background:transparent;}
+
