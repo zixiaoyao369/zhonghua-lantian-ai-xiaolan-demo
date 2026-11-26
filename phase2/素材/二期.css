@@ -987,3 +987,6 @@ dialog[data-kind="safety"] { padding: 21px 18px; }
 .app .mini-capsule>span{background:#ffffff42;}
 .phone-screen:not(:has(.app[data-page="home"])) .phone-status-icons{filter:invert(1);}
 
+
+.phone-screen:not(:has(.app[data-page="home"])) .phone-status{position:relative;z-index:3;box-shadow:0 2px 0 var(--chrome-blue);}
+
