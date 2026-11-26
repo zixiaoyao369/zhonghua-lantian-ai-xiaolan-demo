@@ -976,3 +976,14 @@ dialog[data-kind="safety"] { padding: 21px 18px; }
 /* Cover subpixel gaps between the raster bezel and the screen aperture. */
 .phone-screen{outline:2px solid #0b3473;outline-offset:0;}
 
+
+/* Shared chrome: one navy fill across status and page navigation. */
+:root{--chrome-blue:#0b3473;}
+.phone-screen:not(:has(.app[data-page="home"])) .phone-status{background:var(--chrome-blue);color:#fff;border:0;box-shadow:none;}
+.app:not([data-page="home"])>header,.app .mini-header,.app .logistics-header{background:var(--chrome-blue);border-top:0;box-shadow:none;color:#fff;}
+.app .mini-header>strong,.app .logistics-header strong,.app .logistics-header button{color:#fff;}
+.app .mini-capsule{background:#ffffff12;border-color:#ffffff42;}
+.app .mini-capsule button{color:#fff;}
+.app .mini-capsule>span{background:#ffffff42;}
+.phone-screen:not(:has(.app[data-page="home"])) .phone-status-icons{filter:invert(1);}
+
