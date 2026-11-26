@@ -180,7 +180,7 @@ function render(){
  const n=stepData();shell(title('位置指引',state.goods+' · '+n.name),intro('本环节去哪办理？','按步骤查看地点，按现场指引通行','truck')+'<div class="card"><h2>'+n.posPlace+'</h2><p>'+n.posDetail+'</p><p class="muted">'+n.posTodo+'</p></div><div class="map-list">'+nodes.map((x,i)=>'<button class="card step-card" data-action="loc-step" data-index="'+i+'"><div><h3>'+x.n+' · '+x.posPlace+'</h3><div class="muted">'+x.name+'</div></div></button>').join('')+'</div><div class="card"><h3>导航信息待补充</h3><p class="muted">厂内坐标及路线尚未提供，请按现场标识行驶，或联系负责人确认。</p>'+button('联系负责人','contact','button secondary wide')+'</div>','<footer class="footer">'+button('返回原流程','step','button wide')+'</footer>');
  }else if(state.page==='qa'){
  app.innerHTML=title('问小蓝',state.role+(state.role==='送货司机'?' · '+state.goods+' · '+nodes[state.step].name:''))+
- (!navigator.onLine?'<div class="scroll"><h2>文字问答需要联网</h2><p>请恢复网络后重试，可返回查看固定流程。</p>'+button('重试','qa')+'</div>':'<iframe class="qa-frame" title="一期文字知识问答" src="一期文字问答.html?v=d9f274b26fd0&role='+encodeURIComponent(state.role)+'&goods='+encodeURIComponent(state.goods)+'&step='+state.step+'"></iframe>');
+ (!navigator.onLine?'<div class="scroll"><h2>文字问答需要联网</h2><p>请恢复网络后重试，可返回查看固定流程。</p>'+button('重试','qa')+'</div>':'<iframe class="qa-frame" title="一期文字知识问答" src="一期文字问答.html?v=73cbaa50381e&role='+encodeURIComponent(state.role)+'&goods='+encodeURIComponent(state.goods)+'&step='+state.step+'"></iframe>');
  }
 }
 function faqAnswer(q,n){
