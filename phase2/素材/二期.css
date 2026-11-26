@@ -972,3 +972,7 @@ dialog[data-kind="safety"] { padding: 21px 18px; }
 .app[data-page="home"]{background:transparent;}
 .app[data-page="home"] .home-header,.app[data-page="home"] .hero{background:transparent;}
 
+
+/* Cover subpixel gaps between the raster bezel and the screen aperture. */
+.phone-screen{outline:2px solid #0b3473;outline-offset:0;}
+
